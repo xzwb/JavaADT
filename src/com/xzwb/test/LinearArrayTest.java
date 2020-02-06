@@ -16,5 +16,10 @@ public class LinearArrayTest {
         LinearArray array2 = new LinearArray();
         System.out.println(array2.getSize());
         System.out.println(array2.getLength());
+        // LinearArray array3 = new LinearArray(-1);
+        array1.add(4);
+        System.out.println(array1.getLength());
+        System.out.println(array1.getSize());
+        System.out.println(array1);
     }
 }

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class LinearArray<T> {
     // 初始化长度
-    private final int initSize = 16;
+    private final int initSize = 4;
     // 向量的长度
     private int size;
     // 向量已使用长度
@@ -17,7 +17,9 @@ public class LinearArray<T> {
         this.array = new Object[initSize];
         this.size = initSize;
     }
-    // 含参数构造
+    /**
+     * 含参数构造
+     */
     public LinearArray(int size) {
         this.length = 0;
         if (size > initSize) {
@@ -57,5 +59,37 @@ public class LinearArray<T> {
         return "LinearArray{" +
                 "array=" + Arrays.toString(array) +
                 '}';
+    }
+
+    /**
+     * 数组的拷贝,用于数组扩容时
+     * @param newArray
+     * @return
+     */
+    private Object[] arrayCopy(Object[] newArray) {
+        for (int i = 0; i < length; i++) {
+            newArray[i] = array[i];
+        }
+        return newArray;
+    }
+
+    /**
+     * 数组的扩容
+     */
+    private void expand() {
+        this.size = size<<1;
+        this.array = arrayCopy(new Object[size]);
+    }
+
+    /**
+     * 添加数组元素
+     * @param ele
+     */
+    public void add(T ele) {
+        if (length == size) {
+            expand();
+        }
+        array[length] = ele;
+        length++;
     }
 }
