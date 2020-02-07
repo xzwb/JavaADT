@@ -30,15 +30,17 @@ public class LinearArrayTest {
         stringLinearArray.add("hello");
         stringLinearArray.add("hi");
         stringLinearArray.add("aaaaa");
-        stringLinearArray.add("bbbb");
-        System.out.println(stringLinearArray);
-        stringLinearArray.remove(1);
-        System.out.println(stringLinearArray);
-        stringLinearArray.remove("hello");
-        System.out.println(stringLinearArray);
-        System.out.println(stringLinearArray.get(1));
-        System.out.println(stringLinearArray.find("aaaaa"));
-        stringLinearArray.add("hello", 0);
+        stringLinearArray.add("hi");
+//        System.out.println(stringLinearArray);
+//        stringLinearArray.remove(1);
+//        System.out.println(stringLinearArray);
+//        stringLinearArray.remove("hello");
+//        System.out.println(stringLinearArray);
+//        System.out.println(stringLinearArray.get(1));
+//        System.out.println(stringLinearArray.find("aaaaa"));
+//        stringLinearArray.add("hello", 0);
+//        System.out.println(stringLinearArray);
+        System.out.println(stringLinearArray.deduplicate());
         System.out.println(stringLinearArray);
     }
 }

@@ -227,4 +227,20 @@ public class LinearArray<T> {
             length++;
         }
     }
+
+    /**
+     * 删除重复元素返回新的向量长度
+     * @return
+     */
+    public int deduplicate() {
+        for (int i = 1; i < length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (array[i].equals(array[j])) {
+                    remove(i, i+1);
+                    i--;
+                }
+            }
+        }
+        return length;
+    }
 }
