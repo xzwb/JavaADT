@@ -2,6 +2,10 @@ package com.xzwb.linearArray;
 
 import java.util.Arrays;
 
+/**
+ * 无序向量
+ * @param <T>
+ */
 public class LinearArray<T> {
     // 初始化长度
     private final int initSize = 4;
@@ -56,9 +60,12 @@ public class LinearArray<T> {
 
     @Override
     public String toString() {
-        return "LinearArray{" +
-                "array=" + Arrays.toString(array) +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder("LinearArray{array=[");
+        for (int i = 0; i < length-1; i++) {
+            stringBuilder.append(array[i]+", ");
+        }
+        stringBuilder.append(array[length-1] + "]}");
+        return stringBuilder.toString();
     }
 
     /**
@@ -105,5 +112,119 @@ public class LinearArray<T> {
             }
         }
         return -1;
+    }
+
+    public Object[] getArray() {
+        return array;
+    }
+
+    public void setArray(Object[] array) {
+        this.array = array;
+    }
+
+    /**
+     * 删除一个元素
+     * @param ele
+     */
+    public void remove(T ele) {
+        int index = find(ele);
+        if (index < 0) {
+            return;
+        } else {
+            remove(index, index+1);
+        }
+    }
+
+    /**
+     * 删除标号为index的元素
+     * @param index
+     */
+    public void remove(int index) {
+        remove(index, index+1);
+    }
+
+    /**
+     * 删除编号为begin到标号为end区间的元素不包括end但包括begin
+     * @param begin
+     * @param end
+     */
+    public void remove(int begin, int end) {
+        if (isEmpty()) {
+            return;
+        }
+        if (begin < 0) {
+            begin = 0;
+        }
+        if (end >= length) {
+            length = begin;
+            return;
+        }
+        while (end < length) {
+            array[begin] = array[end];
+            begin++;
+            end++;
+        }
+        length = length - (end - begin);
+    }
+
+    /**
+     * 删除所有元素
+     */
+    public void removeAll() {
+        array = new Object[initSize];
+        length = 0;
+        size = initSize;
+    }
+
+    /**
+     * 判断数组是否为空,为空返回true,不为空返回false
+     * @return
+     */
+    public boolean isEmpty() {
+        if (length == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 返回特定标号的元素
+     * @param index
+     * @return
+     */
+    public Object get(int index) {
+        if (isEmpty()) {
+            return null;
+        }
+        if (index >= length) {
+            return array[length-1];
+        } else if (index < 0) {
+            return array[0];
+        } else {
+            return array[index];
+        }
+    }
+
+    /**
+     * 在index位置后添加元素
+     * @param ele
+     * @param index
+     */
+    public void add(T ele, int index) {
+        if (index < 0) {
+            index = 0;
+        }
+        if (isEmpty() || index > length) {
+            add(ele);
+        } else {
+            if (length == size) {
+                expand();
+            }
+            for (int i = length; i > index; i--) {
+                array[i] = array[i-1];
+            }
+            array[index] = ele;
+            length++;
+        }
     }
 }
