@@ -92,4 +92,18 @@ public class LinearArray<T> {
         array[length] = ele;
         length++;
     }
+
+    /**
+     * 查询对象所在秩(rank)若没有返回-1,有返回最先遇到的
+     * @param ele
+     * @return
+     */
+    public int find(T ele) {
+        for (int i = 0; i < length; i++) {
+            if (ele.equals(array[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
