@@ -112,7 +112,7 @@ public class OrderVector<T> {
     }
 
     /**
-     * 二分法查找元素,未找到返回-1
+     * 二分查找元素,未找到返回-1
      * @param ele
      * @param <T>
      * @return
