@@ -110,4 +110,26 @@ public class OrderVector<T> {
         array[index] = ele;
         length++;
     }
+
+    /**
+     * 二分法查找元素,未找到返回-1
+     * @param ele
+     * @param <T>
+     * @return
+     */
+    public <T extends Comparable> int search(T ele) {
+        int left = 0;
+        int right = length;
+        int mid = (left + right) / 2;
+        while (left < right) {
+            if (ele.compareTo(array[mid]) < 0) {
+                right = left - 1;
+            } else if (ele.compareTo(array[mid]) > 0) {
+                left = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
 }

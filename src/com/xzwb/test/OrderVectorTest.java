@@ -17,5 +17,6 @@ public class OrderVectorTest {
         array1.add(orderVectorPojo1);
         array1.add(new OrderVectorPojo(3));
         System.out.println(array1);
+        System.out.println(array1.search(orderVectorPojo1));
     }
 }
