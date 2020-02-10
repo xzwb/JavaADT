@@ -79,10 +79,63 @@ public class GenericArray<T extends Comparable> {
         this.array = array;
     }
 
+    /**
+     * 调用排序方法
+     * @param <T>
+     */
     public <T extends Comparable> void sort() {
-        sort(array);
+        mergeSort(array, length);
     }
 
+    /**
+     * 归并排序
+     * @param array
+     * @param length
+     * @param <T>
+     */
+    private <T extends Comparable> void mergeSort(T[] array, int length) {
+        if (length > 1) {
+            T[] leftHalf = (T[]) new Comparable[length / 2];
+            System.arraycopy(array, 0, leftHalf, 0, length/2);
+            mergeSort(leftHalf, leftHalf.length);
+            int rightHalfLength = length - length / 2;
+            T[] rightHalf = (T[]) new Comparable[rightHalfLength];
+            System.arraycopy(array, length/2, rightHalf, 0, rightHalfLength);
+            mergeSort(rightHalf, rightHalfLength);
+
+            T[] end = merge(leftHalf, rightHalf);
+            System.arraycopy(end, 0, array, 0, end.length);
+        }
+    }
+
+    private <T extends Comparable> T[] merge(T[] left, T[] right) {
+        T[] result = (T[]) new Comparable[left.length + right.length];
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while (j < left.length && k < right.length) {
+            if (left[j].compareTo(right[k]) <= 0) {
+                result[i++] = left[j++];
+            } else {
+                result[i++] = right[k++];
+            }
+        }
+
+        while (j < left.length) {
+            result[i++] = left[j++];
+        }
+
+        while (k < right.length) {
+            result[i++] = right[k++];
+        }
+        return result;
+    }
+
+    /**
+     * 冒泡排序
+     * @param array
+     * @param <T>
+     */
     private <T extends Comparable<T>> void sort(T[] array) {
         T temp;
         for (int i = 0; i < length-1; i++) {
