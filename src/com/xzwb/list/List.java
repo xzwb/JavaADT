@@ -1,8 +1,6 @@
 package com.xzwb.list;
 
-import java.util.LinkedList;
-
-public class List<T> {
+public class List<T extends Comparable> {
     private List.Node<T> head;
     private List.Node<T> last;
     private int size;
@@ -89,6 +87,16 @@ public class List<T> {
         return node.ele;
     }
 
+    public int get(T ele) {
+        List.Node<T> node = head;
+        for (int i = 0; i < size; i++) {
+            if (node.ele.equals(ele)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("List = {");
@@ -101,7 +109,78 @@ public class List<T> {
         return stringBuilder.toString();
     }
 
-    private  static class Node<T> {
+    /**
+     * 删除对应元素
+     * @param ele
+     */
+    public void remove(T ele) {
+        List.Node<T> node = this.head;
+        while (node != null) {
+            if (node.ele.equals(ele)) {
+                if (size < 2) {
+                  removeHead();
+                } else if (node.next == null) {
+                    removeLast();
+                } else if (node.prev == null) {
+                    removeHead();
+                } else {
+                    node.prev.next = node.next;
+                    node.next.prev = node.prev;
+                }
+            }
+            node = node.next;
+        }
+        size--;
+    }
+
+    /**
+     * 找到最大值
+     * @return
+     */
+    public T selectMax() {
+        List.Node<T> maxNode = this.head;
+        List.Node<T> node = this.head;
+        for (int i = 0; i < size-1; i++) {
+            if (maxNode.ele.compareTo(node.ele) <= 0) {
+                maxNode = node;
+            }
+            node = node.next;
+        }
+        if (maxNode.ele.compareTo(node.ele) <= 0) {
+            maxNode = node;
+        }
+        return maxNode.ele;
+    }
+
+    /**
+     * 删除头元素
+     */
+    private void removeHead() {
+        if (size < 2) {
+            this.head = this.last = null;
+        } else {
+            List.Node<T> node = this.head;
+            node.next.prev = null;
+            this.head = node.next;
+        }
+        size--;
+    }
+
+    /**
+     * 删除末尾元素
+     */
+    private void removeLast() {
+        if (size < 2) {
+            this.head = this.last = null;
+        } else {
+            List.Node<T> node = this.last;
+            node.prev.next = null;
+            this.last = node.prev;
+        }
+        size--;
+    }
+
+    private  static class Node<T extends Comparable> {
         T ele;
         List.Node<T> next;
         List.Node<T> prev;
