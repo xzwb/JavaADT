@@ -9,6 +9,39 @@ public class BinTree<T> {
         size = 0;
     }
 
+    private BinTree.BinNode<T> insertLeft(T ele, BinTree.BinNode<T> node) {
+        size++;
+        node.insertLeftNode(ele);
+        updateHeightAbove(node);
+        return node.leftChild;
+    }
+
+
+    private BinTree.BinNode<T> insertRight(T ele, BinTree.BinNode<T> node) {
+        size++;
+        node.insertRightNode(ele);
+        updateHeightAbove(node);
+        return node.rightChild;
+    }
+
+    private int getHeight(BinTree.BinNode<T> node) {
+        return (node == null) ? -1 : node.height;
+    }
+
+    private int max(int a, int b) {
+        return a > b ? a : b;
+    }
+
+    private int updateHeight(BinTree.BinNode<T> node) {
+        return node.height = 1 + max(getHeight(node.leftChild), getHeight(node.rightChild));
+    }
+
+    private void updateHeightAbove(BinTree.BinNode<T> node) {
+        while (node != null) {
+            updateHeight(node);
+            node = node.parent;
+        }
+    }
     /**
      * 判断是否为空
      * @return true为空
@@ -29,6 +62,7 @@ public class BinTree<T> {
             this.leftChild = null;
             this.rightChild = null;
             this.ele = ele;
+            this.height = 0;
         }
 
         BinTree.BinNode<T> insertLeftNode(T ele) {
