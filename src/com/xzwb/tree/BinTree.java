@@ -1,18 +1,77 @@
 package com.xzwb.tree;
 
-import java.util.Stack;
+import com.xzwb.stack.Stack;
 
 public class BinTree<T> {
     private BinTree.BinNode<T> root;
     int size;
 
-    BinTree() {
-        this.root = null;
-        size = 0;
+    public int getSize() {
+        return size;
+    }
+
+    public BinTree(T ele) {
+        this.root = new BinTree.BinNode(ele, null);
+        size = 1;
+    }
+
+    public boolean insert(T ele, T parentEle, int lor) {
+        if (find(parentEle) == null) {
+            return false;
+        }
+        if (lor < 0) {
+            insertLeft(ele, find(parentEle));
+        } else {
+            insertRight(ele, find(parentEle));
+        }
+        return true;
     }
 
     private BinTree.BinNode<T> find(T ele) {
+        Stack<BinTree.BinNode<T>> stack = new Stack<>();
+        BinTree.BinNode<T> node = root;
+        if (node == null) {
+            return null;
+        } else {
+            stack.push(node);
+            while (stack.getSize() != 0) {
+                node = stack.pull();
+                if (ele.equals(node.ele)) {
+                    return node;
+                }
+                if (node.rightChild != null) {
+                    stack.push(node.rightChild);
+                }
+                if (node.leftChild != null) {
+                    stack.push(node.leftChild);
+                }
+            }
+        }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("tree = {");
+        Stack<BinTree.BinNode<T>> stack = new Stack<>();
+        BinTree.BinNode<T> node = root;
+        if (node == null) {
+            stringBuilder.append("}");
+        } else {
+            stack.push(node);
+            while (stack.getSize() != 0) {
+                node = stack.pull();
+                stringBuilder.append(node.ele + ", ");
+                if (node.rightChild != null) {
+                    stack.push(node.rightChild);
+                }
+                if (node.leftChild != null) {
+                    stack.push(node.leftChild);
+                }
+            }
+        }
+        stringBuilder.append("}");
+        return stringBuilder.toString();
     }
 
     private BinTree.BinNode<T> insertLeft(T ele, BinTree.BinNode<T> node) {

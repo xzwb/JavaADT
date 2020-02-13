@@ -6,6 +6,10 @@ public class Stack<T> {
     private Stack.Node<T> last;
     private int size;
 
+    public int getSize() {
+        return size;
+    }
+
     public Stack() {
         head = null;
         last = null;
