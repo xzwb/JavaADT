@@ -1,5 +1,7 @@
 package com.xzwb.tree;
 
+import java.util.Stack;
+
 public class BinTree<T> {
     private BinTree.BinNode<T> root;
     int size;
@@ -7,6 +9,10 @@ public class BinTree<T> {
     BinTree() {
         this.root = null;
         size = 0;
+    }
+
+    private BinTree.BinNode<T> find(T ele) {
+        return null;
     }
 
     private BinTree.BinNode<T> insertLeft(T ele, BinTree.BinNode<T> node) {

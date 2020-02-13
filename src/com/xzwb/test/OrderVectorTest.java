@@ -1,7 +1,7 @@
 package com.xzwb.test;
 
 import com.xzwb.linearArray.OrderVector;
-import com.xzwb.pojo.OrderVectorPojo;
+import com.xzwb.testClass.OrderVectorPojo;
 
 public class OrderVectorTest {
     public static void main(String[] args) {

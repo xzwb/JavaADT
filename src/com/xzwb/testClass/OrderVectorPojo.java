@@ -1,4 +1,4 @@
-package com.xzwb.pojo;
+package com.xzwb.testClass;
 
 public class OrderVectorPojo implements Comparable {
     public int anInt;
