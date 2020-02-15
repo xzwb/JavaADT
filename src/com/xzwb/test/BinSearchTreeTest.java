@@ -9,6 +9,8 @@ public class BinSearchTreeTest {
         tree.add(3, "864");
         tree.add(4, "555");
         tree.add(2, "741");
+        tree.add(-1, "-1");
+tree.remove(-1);
         System.out.println(tree);
         System.out.println(tree.getValue(2));
     }
