@@ -62,6 +62,9 @@ public class BinSearchTree<K extends Comparable, V> {
         BinSearchTree.BinSearchTreeNode<K, V> p;
         if (getValue(key) == null) {
             return;
+        } else if (temp == root) {
+            root = null;
+            return;
         }
         p = temp.parent;
         System.out.println(p.key + " " + temp.key);
