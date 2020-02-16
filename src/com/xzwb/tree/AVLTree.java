@@ -16,13 +16,13 @@ public class AVLTree<K extends Comparable, V> {
      */
     private boolean avlBalanced(AVLTree.AVLTreeNode node) {
         if (node.rightChild != null && node.leftChild != null) {
-            return (((node.leftChild.height - node.rightChild.height) > -2) || ((node.leftChild.height - node.rightChild.height) < 2));
+            return (((node.leftChild.height - node.rightChild.height) > -2) && ((node.leftChild.height - node.rightChild.height) < 2));
         } else if (node.leftChild == null && node.rightChild == null) {
             return true;
         } else if (node.leftChild != null && node.rightChild == null) {
-            return node.leftChild.height < 2;
+            return node.leftChild.height < 1;
         } else if (node.rightChild != null && node.leftChild == null) {
-            return node.rightChild.height < 2;
+            return node.rightChild.height < 1;
         }
         return false;
     }
@@ -65,59 +65,128 @@ public class AVLTree<K extends Comparable, V> {
         return null;
     }
 
+    /**
+     * 旋转
+     * @param node
+     * @return
+     */
+    private AVLTree.AVLTreeNode<K, V> rotate(AVLTree.AVLTreeNode node) {
+        AVLTree.AVLTreeNode parentNode = node.parent;
+        AVLTree.AVLTreeNode grandparentNode = parentNode.parent;
+        if (node.key.compareTo(root.key) > 0) {
+            if (node.equals(parentNode.rightChild)) {
+                if (parentNode.equals(grandparentNode.rightChild)) {
+                    return connect34(grandparentNode, parentNode, node, grandparentNode.leftChild, parentNode.leftChild, node.leftChild, node.rightChild);
+                } else {
+                    return connect34(parentNode, node, grandparentNode, parentNode.leftChild, node.leftChild, node.rightChild, grandparentNode.rightChild);
+
+                }
+            } else {
+                if (parentNode.equals(grandparentNode.rightChild)) {
+                    return connect34(grandparentNode, node, parentNode, grandparentNode.leftChild, node.leftChild, node.rightChild, parentNode.rightChild);
+                } else {
+                    return connect34(node, parentNode, grandparentNode, node.leftChild, node.rightChild, parentNode.rightChild, grandparentNode.rightChild);
+                }
+            }
+        } else {
+            if (parentNode.equals(grandparentNode.leftChild)) {
+                if (node.equals(parentNode.leftChild)) {
+                    return connect34(node, parentNode, grandparentNode, node.leftChild, node.rightChild, parentNode.rightChild, grandparentNode.rightChild);
+                } else {
+                    return connect34(parentNode, node, grandparentNode, parentNode.leftChild, node.leftChild, node.rightChild, grandparentNode.rightChild);
+                }
+            } else {
+                if (node.equals(parentNode.rightChild)) {
+                    return connect34(grandparentNode, parentNode, node, grandparentNode.leftChild, parentNode.leftChild, node.leftChild, node.rightChild);
+                } else {
+                    return connect34(grandparentNode, node, parentNode, grandparentNode.leftChild, node.leftChild, node.rightChild, parentNode.rightChild);
+                }
+            }
+        }
+    }
+    /**
+     * 3+4重构
+     * @param a
+     * @param b
+     * @param c
+     * @param t0
+     * @param t1
+     * @param t2
+     * @param t3
+     * @return
+     */
+    private AVLTree.AVLTreeNode<K, V> connect34(AVLTreeNode a, AVLTreeNode b, AVLTreeNode c, AVLTreeNode t0, AVLTreeNode t1, AVLTreeNode t2, AVLTreeNode t3) {
+        a.leftChild = t0;
+        if (t0 != null) {
+            t0.parent = a;
+        }
+        a.rightChild = t1;
+        if (t1 != null) {
+            t1.parent = a;
+        }
+        updateHeight(a);
+        c.leftChild = t2;
+        if (t2 != null) {
+            t2.parent = c;
+        }
+        c.rightChild = t3;
+        if (t3 != null) {
+            t3.parent = c;
+        }
+        updateHeight(c);
+        b.leftChild = a;
+        b.rightChild = c;
+        a.parent = b;
+        c.parent = b;
+        updateHeight(b);
+        return b;
+    }
+
     public void insert(K key, V value) {
         if (root == null) {
             root = new AVLTreeNode<>(key, value, null);
             return;
         }
-        AVLTree.AVLTreeNode<K, V> temp = search(key);
-        if (temp.key.compareTo(key) == 0) {
+        int index = 0;
+        AVLTreeNode temp = search(key);
+        AVLTreeNode grandTemp = temp;
+        AVLTreeNode newNode;
+        if (key.compareTo(temp.key) == 0) {
             temp.value = value;
-            return;
         } else if (key.compareTo(temp.key) > 0) {
             temp.insertRightTree(key, value);
         } else {
             temp.insertLeftTree(key, value);
         }
         while (temp != null) {
-            if (!avlBalanced(temp)) {
-                AVLTree.AVLTreeNode<K, V> parentTemp = temp.parent;
-                AVLTree.AVLTreeNode<K, V> childTemp;
-                if (temp.parent == null) {
-                    if (temp.rightChild == null) {
-                        root = temp.leftChild;
-                    } else {
-                        root = temp.rightChild;
-                    }
-                    root.parent = null;
-                    temp.parent = root;
-                    temp.height--;
-                } else {
-                    parentTemp = temp.parent;
-                    if (temp.leftChild == null) {
-                        childTemp = temp.rightChild;
-                    } else {
-                        childTemp = temp.leftChild;
-                    }
-                    if (childTemp.leftChild == null) {
-                        childTemp.leftChild = temp;
-                    } else {
-                        childTemp.rightChild = temp;
-                    }
-                    temp.parent = childTemp;
-                    temp.height--;
-                    if (parentTemp.leftChild.key.compareTo(temp.key) == 0) {
-                        parentTemp.leftChild = childTemp;
-                    }  else {
-                        parentTemp.rightChild = childTemp;
-                    }
-                    childTemp.parent = parentTemp;
-                    break;
-                }
-            } else {
+            AVLTreeNode parentTemp = temp.parent;
+            if (index > 2) {
+                grandTemp = grandTemp.parent;
+            }
+            if (avlBalanced(temp)) {
                 updateHeight(temp);
+            } else {
+                if (root == temp) {
+                    newNode = rotate(search(key));
+                    if (grandTemp.key.compareTo(root.key) > 0) {
+                        root = newNode;
+                    } else {
+                        root = newNode;
+                    }
+                    newNode.parent = null;
+                } else {
+                    newNode = rotate(grandTemp);
+                    if (grandTemp.key.compareTo(parentTemp.key) > 0) {
+                        parentTemp.rightChild = newNode;
+                    } else {
+                        parentTemp.leftChild = newNode;
+                    }
+                    newNode.parent = parentTemp;
+                }
+                break;
             }
             temp = temp.parent;
+            index++;
         }
     }
 
