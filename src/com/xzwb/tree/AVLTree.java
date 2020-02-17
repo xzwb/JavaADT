@@ -190,6 +190,130 @@ public class AVLTree<K extends Comparable, V> {
         }
     }
 
+    private AVLTreeNode<K, V> midNextNode(AVLTreeNode node) {
+        Stack<AVLTree.AVLTreeNode<K, V>> stack = new Stack<>();
+        AVLTreeNode<K, V> temp = root;
+        int count = 0;
+        while (temp != null || stack.getSize() != 0) {
+            if (temp != null) {
+                stack.push(temp);
+                temp = temp.leftChild;
+            } else {
+                temp = stack.pull();
+                if (count > 0) {
+                    return temp;
+                }
+                if (node.key.compareTo(temp.key) == 0) {
+                    count++;
+                }
+                temp = temp.rightChild;
+            }
+        }
+        return null;
+    }
+
+    public void remove(K key) {
+        AVLTreeNode<K, V> temp = search(key);
+        AVLTreeNode<K, V> node = null;
+        AVLTreeNode sonNode;
+        AVLTreeNode newRootNode;
+        if (temp == null) {
+            return;
+        }
+        if (temp.key.compareTo(key) != 0) {
+            return;
+        }
+        if (temp == root) {
+            root = null;
+        } else if (temp.leftChild == null && temp.rightChild == null) {
+            node = temp.parent;
+            if (node.leftChild.equals(temp)) {
+                node.leftChild = null;
+            } else {
+                node.rightChild = null;
+            }
+        } else if (temp.leftChild != null && temp.rightChild == null) {
+            node = temp.parent;
+            temp = temp.leftChild;
+            temp.parent = node;
+            if (node.leftChild.equals(temp)) {
+                node.leftChild = temp;
+            } else {
+                node.rightChild = temp;
+            }
+        } else if (temp.leftChild == null && temp.rightChild != null) {
+            node = temp.parent;
+            temp = temp.rightChild;
+            temp.parent = node;
+            if (node.leftChild.equals(temp)) {
+                node.leftChild = temp;
+            } else {
+                node.rightChild = temp;
+            }
+        } else {
+            AVLTreeNode<K, V> midNode = midNextNode(temp);
+            K keyTemp = midNode.key;
+            midNode.key = temp.key;
+            temp.key = keyTemp;
+            V value = midNode.value;
+            midNode.value = temp.value;
+            temp.value = value;
+            node = midNode.parent;
+            temp = midNode;
+            midNode = midNode.leftChild;
+            if (temp.equals(node.leftChild)) {
+                node.leftChild = midNode;
+            } else {
+                node.rightChild = midNode;
+            }
+            if (midNode != null) {
+                midNode.parent = node;
+            }
+        }
+        AVLTreeNode parentNode = node.parent;
+        while (parentNode != null) {
+            if (avlBalanced(node)) {
+                updateHeight(node);
+                node = node.parent;
+            } else {
+                if (getHeight(node.leftChild) > getHeight(node.rightChild)) {
+                    sonNode = node.leftChild;
+                } else {
+                    sonNode = node.rightChild;
+                }
+                if (sonNode.leftChild != null) {
+                    newRootNode = rotate(sonNode.leftChild);
+                } else {
+                    newRootNode = rotate(sonNode.rightChild);
+                }
+                if (newRootNode.key.compareTo(parentNode.key) < 0) {
+                    parentNode.leftChild = newRootNode;
+                } else {
+                    parentNode.rightChild = newRootNode;
+                }
+                newRootNode.parent = parentNode;
+                node = parentNode;
+            }
+            parentNode = parentNode.parent;
+        }
+        if (!avlBalanced(node)) {
+            if (getHeight(node.leftChild) > getHeight(node.rightChild)) {
+                sonNode = node.leftChild;
+            } else {
+                sonNode = node.rightChild;
+            }
+            if (sonNode.leftChild != null) {
+                newRootNode = rotate(sonNode.leftChild);
+            } else {
+                newRootNode = rotate(sonNode.rightChild);
+            }
+            newRootNode.parent = null;
+            root = newRootNode;
+        } else {
+            updateHeight(node);
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("tree = {");
