@@ -77,16 +77,24 @@ public class BSTTree<T extends Comparable<T>> {
             } else { // 删除只有一颗子树的节点
                 // 如果要删除的节点有左子节点
                 if (targetNode.left != null) {
-                    if (targetNode.equals(parent.left)) {
-                        parent.left = targetNode.left;
+                    if (parent != null) {
+                        if (targetNode.equals(parent.left)) {
+                            parent.left = targetNode.left;
+                        } else {
+                            parent.right = targetNode.left;
+                        }
                     } else {
-                        parent.right = targetNode.left;
+                        root = targetNode.left;
                     }
                 } else { //要删除的节点有右子节点
-                    if (targetNode.equals(parent.left)) {
-                        parent.left = targetNode.right;
+                    if (parent != null) {
+                        if (targetNode.equals(parent.left)) {
+                            parent.left = targetNode.right;
+                        } else {
+                            parent.right = targetNode.right;
+                        }
                     } else {
-                        parent.right = targetNode.right;
+                        root = targetNode.right;
                     }
                 }
             }
@@ -257,12 +265,15 @@ class Test {
         tree.add(2);
         tree.infixOrder();
         System.out.println("----------------------------------------");
-//        // 测试删除叶子节点
-//        tree.delNode(2);
-//        tree.infixOrder();
-//        tree.delNode(1);
-//        tree.infixOrder();
+        tree.delNode(2);
+        tree.delNode(5);
+        tree.delNode(9);
+        tree.delNode(12);
         tree.delNode(7);
+        tree.delNode(3);
+        tree.delNode(10);
+        tree.delNode(1);
+
         tree.infixOrder();
 
     }
