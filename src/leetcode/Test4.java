@@ -11,35 +11,41 @@ public class Test4 {
                 {10, 13, 14, 17, 24},
                 {18, 21, 23, 26, 30}
         };
-        System.out.println(findNumberIn2DArray(matrix, 8));
-//        System.out.println(findNumberIn2DArray(matrix, 20));
+//        int[][] matrix = {{-5}};
+        System.out.println(findNumberIn2DArray(matrix, -5));
+        System.out.println(findNumberIn2DArray(matrix, 20));
     }
 
     public static boolean findNumberIn2DArray(int[][] matrix, int target) {
         for (int[] nums : matrix) {
+            if (nums.length == 0) {
+                return false;
+            }
             if (target < nums[0]) {
                 return false;
             }
-            if (target < nums[nums.length - 1]) {
-                return binarySearch(nums, target);
+            if (target <= nums[nums.length - 1]) {
+                if (binarySearch(nums, target)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public static boolean binarySearch(int[] nums, int target) {
-        int i = 0, j = nums.length;
-        int mid = (i + j) / 2;
-        while (i <= j) {
-            if (target < nums[mid]) {
-                j = mid - 1;
-            } else if (target > nums[mid]) {
-                i = mid + 1;
-            }
-            if (i == j && target == nums[mid]) {
+        int left = 0;
+        int right = nums.length;
+        int mid = (left + right) / 2;
+        while (left <= right) {
+            if (target == nums[mid]) {
                 return true;
+            } else if (target < nums[mid]) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
             }
-            mid = (i + j) / 2;
+            mid = (left + right) / 2;
         }
         return false;
     }
