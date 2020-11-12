@@ -75,7 +75,7 @@ public class GitHubUpLoad {
     public static void main(String[] args) {
         String url = "https://api.github.com/repos/xzwb/GitHubJava/contents/1.md";
         File file = new File("/home/xzwb/1.md");
-        boolean result = create(url, file, "c359549edf52906594b76eb4b12109396d8c35f5");
+        boolean result = create(url, file, "c6b15229e6cddbe6ea3b3130c70f4a6410db0967");
         System.out.println(result);
     }
 }
